@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">8Discover</string>
+    <string name="paris">8Discover</string>
+    <string name="welcome_back">Bienvenue</string>
+    <string name="read_it_together">Read it together</string>
+    <string name="skip">Skip</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="forget_password">Mot de passe oubliée?</string>
 </resources>

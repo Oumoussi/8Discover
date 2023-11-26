@@ -1,5 +1,7 @@
 package com.univ.paris8discover.utils;
 
+import com.univ.paris8discover.models.Point;
+
 import java.util.List;
 
 public class LocationUtils {
@@ -28,10 +30,10 @@ public class LocationUtils {
         }
 
         Point closestPoint = points.get(0);
-        double minDistance = haversineDistance(myLat, myLon, closestPoint.getLat(), closestPoint.getLon());
+        double minDistance = haversineDistance(myLat, myLon, closestPoint.getCoordinatesLat(), closestPoint.getCoordinatesLon());
 
         for (Point point : points) {
-            double distance = haversineDistance(myLat, myLon, point.getLat(), point.getLon());
+            double distance = haversineDistance(myLat, myLon, point.getCoordinatesLat(), point.getCoordinatesLon());
             if (distance < minDistance) {
                 minDistance = distance;
                 closestPoint = point;
@@ -41,22 +43,115 @@ public class LocationUtils {
         return closestPoint;
     }
 
-    // Class representing a point with latitude and longitude
+/*
     public static class Point {
-        private double lat;
-        private double lon;
+        private String name;
+        private String image;
+        private String floorNumber;
+        private boolean isBuildingEntrance;
+        private String floorName;
+        private boolean isDoor;
+        private String puid;
+        private double coordinatesLon;
+        private String buid;
+        private String poisType;
+        private double coordinatesLat;
+        private boolean isPublished;
 
-        public Point(double lat, double lon) {
-            this.lat = lat;
-            this.lon = lon;
+
+        public Point(String name,
+                     String floorName,String puid, double coordinatesLon,
+                     String buid,  double coordinatesLat) {
+            this.name = name;
+            this.floorName = floorName;
+            this.puid = puid;
+            this.coordinatesLon = coordinatesLon;
+            this.buid = buid;
+            this.coordinatesLat = coordinatesLat;
         }
 
-        public double getLat() {
-            return lat;
+        // Constructor
+        public Point(String name, String image, String floorNumber, boolean isBuildingEntrance,
+                     String floorName, boolean isDoor, String puid, double coordinatesLon,
+                     String buid, String poisType, double coordinatesLat, boolean isPublished) {
+            this.name = name;
+            this.image = image;
+            this.floorNumber = floorNumber;
+            this.isBuildingEntrance = isBuildingEntrance;
+            this.floorName = floorName;
+            this.isDoor = isDoor;
+            this.puid = puid;
+            this.coordinatesLon = coordinatesLon;
+            this.buid = buid;
+            this.poisType = poisType;
+            this.coordinatesLat = coordinatesLat;
+            this.isPublished = isPublished;
         }
 
-        public double getLon() {
-            return lon;
+        public String getName() {
+            return name;
         }
-    }
+
+        public String getImage() {
+            return image;
+        }
+
+        public String getFloorNumber() {
+            return floorNumber;
+        }
+
+        public boolean isBuildingEntrance() {
+            return isBuildingEntrance;
+        }
+
+        public String getFloorName() {
+            return floorName;
+        }
+
+        public boolean isDoor() {
+            return isDoor;
+        }
+
+        public String getPuid() {
+            return puid;
+        }
+
+        public double getCoordinatesLon() {
+            return coordinatesLon;
+        }
+
+        public String getBuid() {
+            return buid;
+        }
+
+        public String getPoisType() {
+            return poisType;
+        }
+
+        public double getCoordinatesLat() {
+            return coordinatesLat;
+        }
+
+        public boolean isPublished() {
+            return isPublished;
+        }
+
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "name='" + name + '\'' +
+                    ", image='" + image + '\'' +
+                    ", floorNumber='" + floorNumber + '\'' +
+                    ", isBuildingEntrance=" + isBuildingEntrance +
+                    ", floorName='" + floorName + '\'' +
+                    ", isDoor=" + isDoor +
+                    ", puid='" + puid + '\'' +
+                    ", coordinatesLon=" + coordinatesLon +
+                    ", buid='" + buid + '\'' +
+                    ", poisType='" + poisType + '\'' +
+                    ", coordinatesLat=" + coordinatesLat +
+                    ", isPublished=" + isPublished +
+                    '}';
+        }
+    }*/
 }

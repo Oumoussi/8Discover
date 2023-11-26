@@ -14,7 +14,19 @@ public class Point {
     private double coordinatesLat;
     private boolean isPublished;
 
-    // Constructor
+    // Constructors
+
+    public Point(String name,
+                 String floorName,String puid, double coordinatesLon,
+                 String buid,  double coordinatesLat) {
+        this.name = name;
+        this.floorName = floorName;
+        this.puid = puid;
+        this.coordinatesLon = coordinatesLon;
+        this.buid = buid;
+        this.coordinatesLat = coordinatesLat;
+    }
+
     public Point(String name, String image, String floorNumber, boolean isBuildingEntrance,
                  String floorName, boolean isDoor, String puid, double coordinatesLon,
                  String buid, String poisType, double coordinatesLat, boolean isPublished) {

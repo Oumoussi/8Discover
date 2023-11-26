@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.univ.paris8discover.models.Point;
 import com.univ.paris8discover.utils.LocationUtils;
 
 import java.text.DecimalFormat;
@@ -36,16 +37,19 @@ public class MyLocationListener implements LocationListener {
             updateCoordinates(latitude, longitude);
             isFirstLocationUpdate = false;
 
-            List<LocationUtils.Point> points = new ArrayList<>();
-            points.add(new LocationUtils.Point(48.9467, 2.3618)); // Example point 1
-            points.add(new LocationUtils.Point(48.9465, 2.3612)); // Example point 2
-            points.add(new LocationUtils.Point(48.9471, 2.3621)); // Example point 3
+            List<Point> points = new ArrayList<>();
+            String buid = "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389";
+            points.add(new Point("Green space","D0","poi_207bc08b-8293-4e89-b9a8-79cea06c2762", 48.9467, buid, 2.3618));
+            points.add(new Point("Right green space","D0","poi_0cff82e7-1918-4268-b0e2-ecf218b8104e", 48.9465, buid, 2.3612));
+            points.add(new Point("Left green space","D0","poi_ec45c0ab-a4f9-496b-96dc-f9c8efbf6d41", 48.9471, buid,  2.3621));
 
-            LocationUtils.Point closestPoint = LocationUtils.findClosestPoint(latitude, longitude, points);
+
+            Point closestPoint = LocationUtils.findClosestPoint(latitude, longitude, points);
 
             if (closestPoint != null) {
-                System.out.println("Closest Point: Latitude = " + closestPoint.getLat() +
-                        ", Longitude = " + closestPoint.getLon());
+                /*System.out.println("Closest Point: Latitude = " + closestPoint.getCoordinatesLat() +
+                        ", Longitude = " + closestPoint.getCoordinatesLon());*/
+                System.out.println("Closest Point:  " + closestPoint.toString());
             } else {
                 System.out.println("No points provided or the list is empty.");
             }

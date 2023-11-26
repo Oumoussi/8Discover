@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-        <!-- Replace with your logo drawable resource -->
-
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
 
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="92dp"
             android:layout_height="62dp"
-            android:src="@drawable/menu" />
+            android:src="@drawable/logo" />
 
-    <!-- Arrival input field -->
+        <Button
+            android:id="@+id/getLocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get Location"
+            android:layout_centerInParent="true"/>
 
-    <AutoCompleteTextView
-        android:id="@+id/departure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/logo"
-        android:layout_marginTop="172dp"
-        android:hint="@string/hint_departure" />
+        <TextView
+            android:id="@+id/Latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/getLocationButton"
+            android:textColor="@color/black"
+            android:layout_marginTop="37dp"
+            android:text="Latitude:" />
 
-    <AutoCompleteTextView
-        android:id="@+id/arrival"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/departure"
-        android:layout_marginTop="44dp"
-        android:hint="@string/hint_arrival" /> <!-- Replace with your string resource -->
-    android:drawableStart="@drawable/ic_search" <!-- Replace with your search icon drawable resource -->
-    android:drawablePadding="10dp"
-    android:padding="12dp" />
-
-
-</>
+        <TextView
+            android:id="@+id/Longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Longitude:"
+            android:layout_below="@id/getLocationButton"
+            android:layout_marginTop="16dp"/>
+</RelativeLayout>

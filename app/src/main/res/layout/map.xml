@@ -5,6 +5,13 @@
     android:background="@color/white"
     android:padding="16dp">
 
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="384dp"
+            android:layout_height="232dp" />
+
         <ImageView
             android:id="@+id/menu_icon"
             android:layout_width="92dp"

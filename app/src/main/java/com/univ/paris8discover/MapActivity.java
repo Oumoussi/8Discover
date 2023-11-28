@@ -16,12 +16,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class MapActivity extends AppCompatActivity {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private TextView latitudeTextView;
     private TextView longitudeTextView;
     private TextView closestpoint;
+    private GoogleMap googleMap;
+    private MapView mapView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +38,7 @@ public class MapActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.map);
-
+/*
         checkLocationPermission();
 
         latitudeTextView = findViewById(R.id.Latitude);
@@ -42,7 +51,10 @@ public class MapActivity extends AppCompatActivity {
             public void onClick(View v) {
                 requestLocationUpdates();
             }
-        });
+        });*/
+        mapView = findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
     }
 
     @Override
@@ -52,7 +64,15 @@ public class MapActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+    @Override
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
 
+        LatLng currentLocation = new LatLng(48.9467, 2.3618);
+        googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Location"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+    }
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -73,10 +93,34 @@ public class MapActivity extends AppCompatActivity {
                         1,     // Minimum distance between updates in meters
                         new MyLocationListener(latitudeTextView, longitudeTextView, closestpoint)
                 );
+
             } else {
                 // Handle the case where the user has not granted location permission
                 Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    @Override
+    protected void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 }

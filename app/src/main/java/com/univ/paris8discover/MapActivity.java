@@ -38,7 +38,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.map);
-/*
+
         checkLocationPermission();
 
         latitudeTextView = findViewById(R.id.Latitude);
@@ -51,7 +51,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 requestLocationUpdates();
             }
-        });*/
+        });
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Où allons nous ?"
+        android:textSize="24sp"
+        android:textColor="@color/red" <!-- Updated text color -->
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="16dp"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/headerText"
+        android:layout_marginTop="16dp" />
+
+    <!-- Historique des salles Section with red buttons -->
+    <LinearLayout
+        android:id="@+id/roomHistoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/mapView"
+        android:layout_marginTop="8dp">
+
+        <!-- Replace these TextViews with actual buttons styled accordingly -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="A123"
+            android:gravity="center"
+            android:background="@color/red" <!-- Updated button background -->
+        android:padding="8dp"
+        android:textColor="@color/white"/>
+        <!-- Add more buttons similarly -->
+    </LinearLayout>
+
+    <!-- Historique des QR codes Section -->
+    <LinearLayout
+        android:id="@+id/qrHistoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/roomHistoryLayout"
+        android:layout_marginTop="16dp">
+
+        <!-- Replace these ImageViews with actual QR code images -->
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:src="@drawable/qr_code"/>
+        <!-- Add more ImageViews for QR codes similarly -->
+    </LinearLayout>
+
+    <!-- Footer QR Code ImageView -->
+    <ImageView
+        android:id="@+id/footerQRCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/qr_code_footer"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+</RelativeLayout>

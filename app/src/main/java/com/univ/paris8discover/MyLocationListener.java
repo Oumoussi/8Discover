@@ -52,7 +52,7 @@ public class MyLocationListener implements LocationListener {
                 /*System.out.println("Closest Point: Latitude = " + closestPoint.getCoordinatesLat() +
                         ", Longitude = " + closestPoint.getCoordinatesLon());*/
 
-                closestpoint.setText("point plus proche: " + closestPoint.getName().toString());
+                closestpoint.setText("Closest Point: " + closestPoint.getName().toString());
                 System.out.println("Closest Point:  " + closestPoint.toString());
             } else {
                 System.out.println("No points provided or the list is empty.");

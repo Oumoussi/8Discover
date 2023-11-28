@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Header Text "Où allons nous ?" -->
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Où allons nous ?"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <!-- MapView adjusted to be below header -->
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/tvHeader"
+        android:layout_marginTop="20dp" />
+
+    <!-- ScrollView to contain the dynamic content for rooms and QR codes -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mapView"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Section Title "Historique des salles" -->
+            <TextView
+                android:id="@+id/tvRoomHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Historique des salles"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp" />
+
+            <!-- Horizontal LinearLayout for Room Buttons -->
+            <LinearLayout
+                android:id="@+id/llRoomButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <!-- Buttons for rooms would be dynamically added here -->
+            </LinearLayout>
+
+            <!-- Section Title "Historique des QR codes" -->
+            <TextView
+                android:id="@+id/tvQRHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Historique des QR codes"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp" />
+
+            <!-- Horizontal LinearLayout for QR Code Images -->
+            <LinearLayout
+                android:id="@+id/llQRCodes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+                <!-- ImageViews for QR codes would be dynamically added here -->
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Footer with QR Code -->
+    <ImageView
+        android:id="@+id/ivFooterQR"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_qr_code"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp" />
+
+</RelativeLayout>

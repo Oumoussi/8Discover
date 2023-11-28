@@ -18,12 +18,14 @@ public class MyLocationListener implements LocationListener {
 
     private TextView latitudeTextView;
     private TextView longitudeTextView;
+    private TextView closestpoint;
     private boolean isFirstLocationUpdate = true;
 
     // Constructor that takes TextView parameters
-    public MyLocationListener(TextView latitudeTextView, TextView longitudeTextView) {
+    public MyLocationListener(TextView latitudeTextView, TextView longitudeTextView, TextView closestpoint) {
         this.latitudeTextView = latitudeTextView;
         this.longitudeTextView = longitudeTextView;
+        this.closestpoint = closestpoint;
 
     }
 
@@ -49,6 +51,8 @@ public class MyLocationListener implements LocationListener {
             if (closestPoint != null) {
                 /*System.out.println("Closest Point: Latitude = " + closestPoint.getCoordinatesLat() +
                         ", Longitude = " + closestPoint.getCoordinatesLon());*/
+
+                closestpoint.setText("Closest Point: " + closestPoint.toString());
                 System.out.println("Closest Point:  " + closestPoint.toString());
             } else {
                 System.out.println("No points provided or the list is empty.");

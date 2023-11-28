@@ -21,6 +21,7 @@ public class MapActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private TextView latitudeTextView;
     private TextView longitudeTextView;
+    private TextView closestpoint;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +34,7 @@ public class MapActivity extends AppCompatActivity {
 
         latitudeTextView = findViewById(R.id.Latitude);
         longitudeTextView = findViewById(R.id.Longitude);
+        closestpoint = findViewById(R.id.closestpoint);
         // Button to trigger location updates
         Button getLocationButton = findViewById(R.id.getLocationButton);
         getLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +71,7 @@ public class MapActivity extends AppCompatActivity {
                         LocationManager.GPS_PROVIDER,
                         1000,  // Minimum time interval between updates in milliseconds
                         1,     // Minimum distance between updates in meters
-                        new MyLocationListener(latitudeTextView, longitudeTextView)
+                        new MyLocationListener(latitudeTextView, longitudeTextView, closestpoint)
                 );
             } else {
                 // Handle the case where the user has not granted location permission

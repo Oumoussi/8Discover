@@ -1,4 +1,4 @@
-package com.univ.paris8discover;
+package com.univ.paris8discover.screens;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.view.Window;
 import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.univ.paris8discover.R;
 
 public class LoginActivity extends AppCompatActivity {
     private TextView bookITextView;

@@ -1,9 +1,10 @@
-package com.univ.paris8discover;
+package com.univ.paris8discover.screens;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,7 +28,9 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.univ.paris8discover.MainActivity;
+import com.univ.paris8discover.MyLocationListener;
+import com.univ.paris8discover.R;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
@@ -36,6 +39,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private TextView closestpoint;
     private GoogleMap googleMap;
     private MapView mapView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -147,6 +152,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             } else {
                 String qrContent = result.getContents();
+                Log.d("QR content", "qrContent: " + qrContent);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

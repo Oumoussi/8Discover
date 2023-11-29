@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import com.univ.paris8discover.screens.ArNavigation;
+import com.univ.paris8discover.screens.LoginActivity;
+import com.univ.paris8discover.screens.MapActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         switchButton = (Button) findViewById(R.id.demarrer);
         switchButton.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+            Intent intent = new Intent(MainActivity.this, ArNavigation.class);
             startActivity(intent);
         });
         login = (Button) findViewById(R.id.auth);

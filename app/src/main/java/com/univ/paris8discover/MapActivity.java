@@ -12,6 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -24,7 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private FloatingActionButton btnScanQRCode;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     private TextView latitudeTextView;
     private TextView longitudeTextView;
@@ -40,7 +45,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.map);
 
         checkLocationPermission();
-
+        btnScanQRCode = findViewById(R.id.btnScanQRCode);
+        btnScanQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(MapActivity.this);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+                integrator.setPrompt("Scannez un code QR");
+                integrator.setCameraId(0);
+                integrator.initiateScan();
+            }
+        });
         latitudeTextView = findViewById(R.id.Latitude);
         longitudeTextView = findViewById(R.id.Longitude);
         closestpoint = findViewById(R.id.closestpoint);
@@ -122,5 +137,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+
+            } else {
+                String qrContent = result.getContents();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

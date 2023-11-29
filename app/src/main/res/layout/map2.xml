@@ -11,10 +11,10 @@
         android:layout_height="wrap_content"
         android:text="Où allons nous ?"
         android:textSize="24sp"
-        android:textColor="@color/red" <!-- Updated text color -->
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="16dp"/>
+        android:textColor="@color/red"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
@@ -39,8 +39,8 @@
             android:layout_weight="1"
             android:text="A123"
             android:gravity="center"
-            android:background="@color/red" <!-- Updated button background -->
-        android:padding="8dp"
+            android:background="@color/red"
+            android:padding="8dp"
         android:textColor="@color/white"/>
         <!-- Add more buttons similarly -->
     </LinearLayout>
@@ -59,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_weight="1"
-            android:src="@drawable/qr_code"/>
+        />
         <!-- Add more ImageViews for QR codes similarly -->
     </LinearLayout>
 
@@ -68,7 +68,6 @@
         android:id="@+id/footerQRCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/qr_code_footer"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"/>
 </RelativeLayout>

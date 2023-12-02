@@ -1,0 +1,112 @@
+{
+"num_of_pois": 13,
+"pois": [
+{
+"lat": "48.94685021288259",
+"lon": "2.3613113078995385",
+"puid": "poi_384484e4-064e-4dc6-92ec-272d1c658dba",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "0",
+"pois_type": null
+},
+{
+"lat": "48.94684395772129",
+"lon": "2.3613654837437092",
+"puid": "poi_37b97297-1422-439f-9440-1737d71f8701",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "0",
+"pois_type": null
+},
+{
+"lat": "48.94686387514041",
+"lon": "2.3614094464613355",
+"puid": "poi_aff7055a-c81a-4e59-8d7e-b3d2df8489d3",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "0",
+"pois_type": null
+},
+{
+"lat": "48.94690752548159",
+"lon": "2.3614646257838867",
+"puid": "poi_2619832d-323e-43a0-b703-8447ade7d4d0",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "0",
+"pois_type": null
+},
+{
+"lat": "48.94699843970395",
+"lon": "2.3615750451198814",
+"puid": "poi_45a94aa3-e883-4f80-bd76-47f03d88fcea",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.94703264822666",
+"lon": "2.3615940834266125",
+"puid": "poi_31ba9b17-3f03-42e9-a657-b03557bf57d3",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.947069107387556",
+"lon": "2.361616971013878",
+"puid": "poi_232114fe-3a47-42fa-8bc0-4cda46b96f9f",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.9470752014265",
+"lon": "2.3616617551099095",
+"puid": "poi_2bf2a8a8-2034-41b2-a88f-3828668a41ea",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.94708402312437",
+"lon": "2.3617052579155473",
+"puid": "poi_a0530a1b-5598-47a6-b575-48d2cadca459",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.9471142653267",
+"lon": "2.361722687509835",
+"puid": "poi_08c58e43-8a84-486b-b9f4-e0d6ac68a9ef",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.94715274136994",
+"lon": "2.3617882639045895",
+"puid": "poi_8461d2e4-a869-47fd-a962-217564fd805c",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.947182820824686",
+"lon": "2.361837158618587",
+"puid": "poi_f33b81a0-2f2c-4765-af34-fd6a91ba66ec",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+},
+{
+"lat": "48.94721201311813",
+"lon": "2.361867177664476",
+"puid": "poi_7c7d4828-8bbc-4f9f-8bf8-7a12756c7d9c",
+"buid": "building_20b6bbf0-579a-4f09-b9cf-ac0f0cc165ec_1700156714389",
+"floor_number": "1",
+"pois_type": null
+}
+],
+"status": "success",
+"message": "Plotted navigation.",
+"status_code": 200
+}

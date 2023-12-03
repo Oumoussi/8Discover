@@ -59,8 +59,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        this.data =  loadJSONFromAsset("data");
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -82,8 +81,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        this.data =  loadJSONFromAsset("data");
-        Log.d("data", "onQueryTextSubmit: " + data);
+
 
         searchview = findViewById(R.id.searchview);
         searchview.clearFocus();
@@ -144,6 +142,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     public  String loadJSONFromAsset(String filename) {
         String json = null;
+        double size = 0;
         try {
             int resourceId = getResources().getIdentifier(filename, "raw", getPackageName());
 
@@ -158,10 +157,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
+                size += line.length();
                 sb.append(line);
+
             }
             reader.close();
+
             json = sb.toString();
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -217,21 +220,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onLowMemory();
         mapView.onLowMemory();
     }
-    /*protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-
-            } else {
-                String qrContent = result.getContents();
-                Log.d("QR content", "qrContent: " + qrContent);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

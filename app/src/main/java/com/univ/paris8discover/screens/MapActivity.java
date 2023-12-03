@@ -1,5 +1,8 @@
 package com.univ.paris8discover.screens;
 
+import android.app.Dialog;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.Manifest;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -214,6 +218,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -222,11 +227,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (result.getContents() == null) {
 
             } else {
-                String qrContent = result.getContents();
-                Log.d("QR content", "qrContent: " + qrContent);
+                showPopup("My Qr", result.getContents());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void showPopup(String title, String message) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.custom_popup_layout);
+
+        TextView titleTextView = dialog.findViewById(R.id.titleTextView);
+        TextView messageTextView = dialog.findViewById(R.id.messageTextView);
+
+        titleTextView.setText(title);
+        messageTextView.setText(message);
+
+        dialog.show();
     }
 }

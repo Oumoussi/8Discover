@@ -57,6 +57,12 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:queryHint="ex D108" />
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
         </FrameLayout>
 
         <FrameLayout

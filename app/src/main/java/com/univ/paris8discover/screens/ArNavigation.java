@@ -64,13 +64,8 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
             this.puid = intent.getStringExtra("puid");
         }
 
-
         Log.d("Lkwa", "mylat: " + this.puid);
         setContentView(R.layout.navigation);
-
-
-
-
 
         jsonfile =  loadJSONFromAsset("stairsandexits");
         mapView = findViewById(R.id.mapindoorView);

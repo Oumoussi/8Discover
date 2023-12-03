@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +12,17 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.Manifest;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,8 +41,8 @@ import com.univ.paris8discover.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
+import com.univ.paris8discover.models.ListPoints;
+import com.univ.paris8discover.models.Point;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,12 +52,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
+
+    private ArrayList<Point> points = new ArrayList<Point>();
     private Button btnstart;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
+    private JSONArray filteredArray = new JSONArray();
     private GoogleMap googleMap;
     private MapView mapView;
     private boolean isFirstLocationUpdate = true;
@@ -61,11 +73,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
     private String data = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.data =  loadJSONFromAsset("data");
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -86,8 +101,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        initializer(data);
         startnavigation();
+        listView = findViewById(R.id.listView);
 
+        // Create an ArrayAdapter to update the list
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        listView.setAdapter(adapter);
         searchview = findViewById(R.id.searchview);
         searchview.clearFocus();
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -112,8 +132,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                Log.d("l7wa", "onQueryTextSubmit: " + newText);
+                //filterObjects(newText);
+               // Log.d("l7wa", "onQueryTextSubmit: " + newText);
                 return false;
             }
         });
@@ -135,6 +155,44 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
+    }
+    private void initializer(String data) {
+
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.has("pois_type") && jsonObject.getString("pois_type").equals("Room")) {
+                    this.filteredArray.put(jsonObject);
+                }
+            }
+
+            Log.d("TAG", "initializer: " + filteredArray.toString(2));
+
+        } catch (JSONException e) {
+            Log.d("Error", "initializer: " + e.getMessage());
+        }
+    }
+
+    private void filterObjects(String newText) {
+        adapter.clear();
+
+        for (int i = 0; i < this.filteredArray.length(); i++) {
+            try {
+                JSONObject jsonObject = this.filteredArray.getJSONObject(i);
+                String name = jsonObject.optString("name", "");
+                if (name.toLowerCase().contains(newText.toLowerCase())) {
+                    adapter.add(name);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Show or hide the ListView based on whether there are filtered items
+        listView.setVisibility(adapter.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private void startnavigation() {
@@ -183,9 +241,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         updateMapWithCurrentLocation();
     }
 
-    public  String loadJSONFromAsset(String filename) {
+
+
+
+    public String loadJSONFromAsset(String filename) {
         String json = null;
-        double size = 0;
         try {
             int resourceId = getResources().getIdentifier(filename, "raw", getPackageName());
 
@@ -193,27 +253,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Log.e("LoadJSON", "Resource not found: " + filename);
                 return null;
             }
+
             InputStream is = getResources().openRawResource(resourceId);
-
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) {
-                size += line.length();
-                sb.append(line);
 
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+                json = sb.toString();
+
+            } catch (IOException e) {
+                Log.e("LoadJSON", "Error reading JSON file: " + filename, e);
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    Log.e("LoadJSON", "Error closing InputStream", e);
+                }
             }
-            reader.close();
-
-            json = sb.toString();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
         return json;
     }
+
 
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)

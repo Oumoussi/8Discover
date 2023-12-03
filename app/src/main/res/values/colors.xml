@@ -10,4 +10,7 @@
     <color name="colorProgressBar">#FFCE511C</color>
     <color name="colorTextView">#83898E</color>
     <color name="red">#FF0000</color>
+    <color name="grey">#D6D6D6</color>
+    <color name="pinky">#FFC7C2</color>
+    <color name="purple">#4F378B</color>
 </resources>

@@ -2,15 +2,12 @@ package com.univ.paris8discover.screens;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.Manifest;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,6 +16,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -29,16 +27,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.univ.paris8discover.MainActivity;
-import com.univ.paris8discover.MyLocationListener;
 import com.univ.paris8discover.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
-    private TextView latitudeTextView;
-    private TextView longitudeTextView;
-    private TextView closestpoint;
+
     private GoogleMap googleMap;
     private MapView mapView;
+    private boolean isFirstLocationUpdate = true;
+    private SearchView searchview;
+    private double lat = 48.94610144542121 ;
+    private double lon  = 2.3617150845452763;
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +67,53 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 integrator.initiateScan();
             }
         });
-        latitudeTextView = findViewById(R.id.Latitude);
-        longitudeTextView = findViewById(R.id.Longitude);
-        closestpoint = findViewById(R.id.closestpoint);
-        // Button to trigger location updates
-        Button getLocationButton = findViewById(R.id.getLocationButton);
-        getLocationButton.setOnClickListener(new View.OnClickListener() {
+
+        searchview = findViewById(R.id.searchview);
+        searchview.clearFocus();
+        searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                requestLocationUpdates();
+            public boolean onQueryTextSubmit(String query) {
+                ArNavigation arNavigation = new ArNavigation(lat, lon);
+
+                Log.d("Lkwa", "mylat: " + arNavigation.getMylat());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                Log.d("l7wa", "onQueryTextSubmit: ");
+                return false;
             }
         });
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location location = locationResult.getLastLocation();
+                    lat = location.getLatitude();
+                    lon = location.getLongitude();
+                    updateMapWithCurrentLocation();
+                    fusedLocationClient.removeLocationUpdates(this);
+                }
+            }
+        };
+        requestLocationUpdates();
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
     }
-
-
+    private void updateMapWithCurrentLocation() {
+        if (googleMap != null) {
+            LatLng currentLocation = new LatLng(lat, lon);
+            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Moi"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+        }
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -87,12 +124,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
-
-        LatLng currentLocation = new LatLng(48.9467, 2.3618);
-        googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Location"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
+        updateMapWithCurrentLocation();
     }
+
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -102,22 +136,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void requestLocationUpdates() {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (locationManager != null) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                // Use FusedLocationProviderClient for more recent API versions
-                locationManager.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        1000,  // Minimum time interval between updates in milliseconds
-                        1,     // Minimum distance between updates in meters
-                        new MyLocationListener(latitudeTextView, longitudeTextView, closestpoint)
-                );
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000); // Update interval in milliseconds
+        locationRequest.setFastestInterval(5000); // Fastest update interval in milliseconds
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-            } else {
-                // Handle the case where the user has not granted location permission
-                Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show();
-            }
+        if (ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
         }
     }
     @Override
@@ -135,6 +166,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onDestroy() {
         mapView.onDestroy();
+        fusedLocationClient.removeLocationUpdates(locationCallback);
         super.onDestroy();
     }
 

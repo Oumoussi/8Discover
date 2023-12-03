@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -11,7 +12,7 @@
             android:id="@+id/mapView"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="258dp" />
+            android:layout_height="224dp" />
 
         <ImageView
             android:id="@+id/menu_icon"
@@ -19,50 +20,157 @@
             android:layout_height="62dp"
             android:src="@drawable/logo" />
 
-        <Button
-            android:id="@+id/getLocationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Get Location" />
 
-        <TextView
-            android:id="@+id/Latitude"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/mapLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/getLocationButton"
-            android:textColor="@color/black"
-            android:layout_marginTop="37dp"
-            android:text="Latitude:" />
+            android:orientation="horizontal"
+            android:layout_below="@id/mapView">
 
-        <TextView
-            android:id="@+id/Longitude"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/getLocationButton"
-            android:layout_marginTop="20dp"
-            android:text="Longitude:"
-            android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/allonsnous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/red"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Où allons nous ?"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
 
-        <TextView
-            android:id="@+id/closestpoint"
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/searchcountainer"
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mapLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp">
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchview"
+                    android:layout_width="244dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/radiuousbk"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:queryHint="ex D108" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/buttoncountainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/getLocationButton"
-            android:layout_marginTop="84dp"
-            android:text="point plus proche:"
-            android:textColor="@color/black" />
+            android:layout_below="@id/searchcountainer"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true">
+
+                <Button
+                    android:id="@+id/getLocationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/searchcountainer"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/purple"
+                    android:text="Démarrer"
+                    android:textColor="@color/white" />
+        </FrameLayout>
+        <LinearLayout
+            android:id="@+id/roomHistoryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/buttoncountainer"
+            android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/roomHistorytext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/red"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Historique des salles"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/classhistorylist"
+            android:layout_width="match_parent"
+            android:layout_height="127dp"
+            android:layout_below="@id/roomHistoryLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/pinky">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="126dp" />
+        </FrameLayout>
+        <LinearLayout
+            android:id="@+id/qrHistoryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/classhistorylist"
+            android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/qrHistorytext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/red"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Historique des QR codes"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/qrhistorylist"
+            android:layout_width="match_parent"
+            android:layout_height="127dp"
+            android:layout_below="@id/qrHistoryLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/pinky">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_class" />
+
+        </FrameLayout>
+
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnScanQRCode"
-            android:layout_width="103dp"
-            android:layout_height="101dp"
+            android:layout_width="wrap_content"
+            android:layout_height="86dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="26dp"
-            android:layout_marginBottom="52dp"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            android:layout_marginEnd="168dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/qr" />
 
 
 </RelativeLayout>

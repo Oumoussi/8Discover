@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         switchButton = (Button) findViewById(R.id.demarrer);
         switchButton.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ArNavigation.class);
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
             startActivity(intent);
         });
         login = (Button) findViewById(R.id.auth);

@@ -1,5 +1,6 @@
 package com.univ.paris8discover.screens;
 
+import com.univ.paris8discover.utils.ApiCaller;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.univ.paris8discover.R;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -21,34 +23,71 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+
 public class ArNavigation extends AppCompatActivity implements OnMapReadyCallback{
     private MapView mapView;
     private GoogleMap googleMap;
 
     private String jsonfile = "";
+    private double mylat;
+    private double mylon;
+    private double deslat;
+    private double deslon;
 
+    public ArNavigation(double mylat, double mylon  ){
+        this.mylat = mylat;
+        this.mylon = mylon;
+    }
+
+    public double getMylat(){
+        return this.mylat;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation);
+
+
         jsonfile =  loadJSONFromAsset("stairsandexits");
 
         mapView = findViewById(R.id.mapindoorView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync((OnMapReadyCallback) this);
-
-
-
     }
+
 
     @Override
     public void onMapReady(GoogleMap map) {
+        String coordinates_lon = "" + this.mylat;
+        String coordinates_lat = "" + this.mylon;
+        String floor_number = "0";
+        String pois_to = "poi_7c7d4828-8bbc-4f9f-8bf8-7a12756c7d9c";
+
+        ApiCaller apiCaller = new ApiCaller();
+        apiCaller.execute("https://ap.cs.ucy.ac.cy:44/api/navigation/route/coordinates",
+                "{\n" +
+                        "  \"coordinates_lon\": \"" + coordinates_lon + "\",\n" +
+                        "  \"coordinates_lat\": \"" + coordinates_lat + "\",\n" +
+                        "  \"floor_number\": \"" + floor_number + "\",\n" +
+                        "  \"pois_to\": \"" + pois_to + "\"\n" +
+                        "}");
+        try {
+            apiCaller.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
         googleMap = map;
-        String jsonResponse = loadJSONFromAsset("data");
+        String jsonResponse = apiCaller.getResult();
         updateRoute(jsonResponse);
     }
 
@@ -90,6 +129,7 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
     }
+
     private static String getTypeForPuid(String json, String puid) {
         try {
             JSONObject jsonObject = new JSONObject(json);
@@ -102,7 +142,7 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
 
     private void addMarkersForPoints(List<LatLng> coordinates) {
         if (!coordinates.isEmpty()) {
-            googleMap.addMarker(new MarkerOptions().position(coordinates.get(0)).title("Start Point"));
+            googleMap.addMarker(new MarkerOptions().position(coordinates.get(0)).title("Moi"));
             googleMap.addMarker(new MarkerOptions().position(coordinates.get(coordinates.size() - 1)).title("Destination Point"));
         }
     }
@@ -170,5 +210,8 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
+
+
 }
 

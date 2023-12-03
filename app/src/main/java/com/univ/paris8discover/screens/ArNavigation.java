@@ -40,12 +40,12 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
     private String jsonfile = "";
     private double mylat;
     private double mylon;
-    private double deslat;
-    private double deslon;
+    private String puid;
 
-    public ArNavigation(double mylat, double mylon  ){
+    public ArNavigation(double mylat, double mylon, String puid ){
         this.mylat = mylat;
         this.mylon = mylon;
+        this.puid = puid;
     }
 
     public double getMylat(){
@@ -70,7 +70,7 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
         String coordinates_lon = "" + this.mylat;
         String coordinates_lat = "" + this.mylon;
         String floor_number = "0";
-        String pois_to = "poi_7c7d4828-8bbc-4f9f-8bf8-7a12756c7d9c";
+        String puid = this.puid;
 
         ApiCaller apiCaller = new ApiCaller();
         apiCaller.execute("https://ap.cs.ucy.ac.cy:44/api/navigation/route/coordinates",
@@ -78,7 +78,7 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
                         "  \"coordinates_lon\": \"" + coordinates_lon + "\",\n" +
                         "  \"coordinates_lat\": \"" + coordinates_lat + "\",\n" +
                         "  \"floor_number\": \"" + floor_number + "\",\n" +
-                        "  \"pois_to\": \"" + pois_to + "\"\n" +
+                        "  \"pois_to\": \"" + puid + "\"\n" +
                         "}");
         try {
             apiCaller.get();

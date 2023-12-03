@@ -37,10 +37,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
@@ -88,15 +93,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                ArNavigation arNavigation = new ArNavigation(lat, lon);
-                Log.d("Lkwa", "mylat: " + arNavigation.getMylat());
+                String  puid = findPuidByName(data, query);
+                Log.d("Lkwa", "mylat: " + puid);
+                /*if(puid.equals("")){
+                    showPopup("Alert", "Le numéro de la salle entrée n'existe pas");
+                }
+                else{
+                    ArNavigation arNavigation = new ArNavigation(lat, lon, puid);
+                    Intent intent = new Intent(MapActivity.this, ArNavigation.class);
+                    startActivity(intent);
+                    Log.d("Lkwa", "mylat: " + puid);
+                }*/
+                //
+
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                Log.d("l7wa", "onQueryTextSubmit: " );
+                Log.d("l7wa", "onQueryTextSubmit: " + newText);
                 return false;
             }
         });
@@ -120,6 +136,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.getMapAsync(this);
 
     }
+
     private void updateMapWithCurrentLocation() {
         if (googleMap != null) {
             LatLng currentLocation = new LatLng(lat, lon);
@@ -128,6 +145,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f));
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -135,11 +153,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         startActivity(intent);
 
     }
+
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         updateMapWithCurrentLocation();
     }
+
     public  String loadJSONFromAsset(String filename) {
         String json = null;
         double size = 0;
@@ -196,6 +216,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     MY_PERMISSIONS_REQUEST_LOCATION);
         }
     }
+
     @Override
     protected void onResume() {
         mapView.onResume();
@@ -221,7 +242,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onLowMemory();
     }
 
+    public static String findPuidByName(String jsonString, String targetName) {
+        try {
+            JSONObject data = new JSONObject(jsonString);
+            JSONArray poisArray = data.getJSONArray("pois");
 
+            for (int i = 0; i < poisArray.length(); i++) {
+                JSONObject poi = poisArray.getJSONObject(i);
+                String name = poi.getString("name");
+
+                if (name.equals(targetName)) {
+                    return poi.getString("puid");
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Return null if the targetName is not found in the JSON
+        return null;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

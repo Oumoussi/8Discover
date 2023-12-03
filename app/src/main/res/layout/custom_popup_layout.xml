@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/custom_popup_layout.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:orientation="vertical">
 
+    <!-- ImageView for the background image -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/paris8"
+        android:scaleType="centerCrop" />
+
+    <!-- Rest of your layout content -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -20,9 +28,5 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textColor="@android:color/black"/>
-
-    <TextClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></TextClock>
 
 </LinearLayout>

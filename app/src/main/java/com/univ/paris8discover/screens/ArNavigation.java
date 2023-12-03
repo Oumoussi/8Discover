@@ -147,7 +147,7 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private String loadJSONFromAsset(String filename) {
+    public  String loadJSONFromAsset(String filename) {
         String json = null;
         try {
             int resourceId = getResources().getIdentifier(filename, "raw", getPackageName());

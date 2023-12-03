@@ -34,6 +34,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
@@ -47,15 +52,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
+    private String data = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.map);
 
         checkLocationPermission();
+
+
         btnScanQRCode = findViewById(R.id.btnScanQRCode);
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,13 +79,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        this.data =  loadJSONFromAsset("data");
+        Log.d("data", "onQueryTextSubmit: " + data);
+
         searchview = findViewById(R.id.searchview);
         searchview.clearFocus();
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 ArNavigation arNavigation = new ArNavigation(lat, lon);
-
                 Log.d("Lkwa", "mylat: " + arNavigation.getMylat());
                 return false;
             }
@@ -82,7 +95,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                Log.d("l7wa", "onQueryTextSubmit: ");
+                Log.d("l7wa", "onQueryTextSubmit: " );
                 return false;
             }
         });
@@ -125,6 +138,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         updateMapWithCurrentLocation();
+    }
+    public  String loadJSONFromAsset(String filename) {
+        String json = null;
+        try {
+            int resourceId = getResources().getIdentifier(filename, "raw", getPackageName());
+
+            if (resourceId == 0) {
+                Log.e("LoadJSON", "Resource not found: " + filename);
+                return null;
+            }
+            InputStream is = getResources().openRawResource(resourceId);
+
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            json = sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     private void checkLocationPermission() {

@@ -1,7 +1,6 @@
 package com.univ.paris8discover.screens;
 
 import android.app.Dialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -218,8 +217,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onLowMemory();
         mapView.onLowMemory();
     }
-
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    /*protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -227,7 +225,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (result.getContents() == null) {
 
             } else {
-                showPopup("My Qr", result.getContents());
+                String qrContent = result.getContents();
+                Log.d("QR content", "qrContent: " + qrContent);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                // Handle if the user canceled the scan
+            } else {
+                String qrContent = result.getContents();
+                showPopup("Scanned QR Code", qrContent);
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -243,6 +259,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         titleTextView.setText(title);
         messageTextView.setText(message);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                // Handle any actions when the dialog is dismissed
+            }
+        });
 
         dialog.show();
     }

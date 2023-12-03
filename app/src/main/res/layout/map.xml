@@ -75,6 +75,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:backgroundTint="@color/purple"
+                    android:onClick="startnavigation"
                     android:text="Démarrer"
                     android:textColor="@color/white" />
         </FrameLayout>

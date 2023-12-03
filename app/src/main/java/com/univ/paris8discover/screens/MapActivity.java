@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.Manifest;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,10 +46,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
+    private Button btnstart;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     private GoogleMap googleMap;
@@ -65,14 +66,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.data =  loadJSONFromAsset("data");
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.map);
 
-        checkLocationPermission();
 
+        checkLocationPermission();
 
         btnScanQRCode = findViewById(R.id.btnScanQRCode);
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +86,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-
+        startnavigation();
 
         searchview = findViewById(R.id.searchview);
         searchview.clearFocus();
@@ -99,10 +99,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
                 else{
                     Intent intent = new Intent(MapActivity.this, ArNavigation.class);
-                     /*= 2.3634695341113767;
-        = 48.94568295742288;
-         = "poi_6d5113e7-5fd3-466d-bcb9-9dd6d3312e6f";*/
-                    intent.putExtra("puid", "poi_6d5113e7-5fd3-466d-bcb9-9dd6d3312e6f");
+
+                    intent.putExtra("puid", puid);
                     intent.putExtra("lat", 48.94568295742288);
                     intent.putExtra("lon", 2.3634695341113767);
                     startActivity(intent);
@@ -119,7 +117,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return false;
             }
         });
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
             @Override
@@ -137,6 +134,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+    }
+
+    private void startnavigation() {
+        btnstart = (Button) findViewById(R.id.getLocationButton);
+        btnstart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String query = searchview.getQuery().toString();
+                String puid = findPuidByName(data, query);
+                if(puid == null){
+                    showPopup("Alert !!!", "la salle entrée n'existe pas");
+                }
+                else{
+                    Intent intent = new Intent(MapActivity.this, ArNavigation.class);
+
+                    intent.putExtra("puid", puid);
+                    intent.putExtra("lat", 48.94568295742288);
+                    intent.putExtra("lon", 2.3634695341113767);
+                    startActivity(intent);
+                }
+            }
+        });
 
     }
 

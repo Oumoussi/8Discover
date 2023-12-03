@@ -1,6 +1,5 @@
 package com.univ.paris8discover.screens;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,29 +9,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.Manifest;
-import android.app.Dialog;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,6 +34,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FloatingActionButton btnScanQRCode;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1;
@@ -61,15 +52,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
 
+    private String data = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.map);
 
         checkLocationPermission();
+
+
         btnScanQRCode = findViewById(R.id.btnScanQRCode);
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,22 +79,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        this.data =  loadJSONFromAsset("data");
+        Log.d("data", "onQueryTextSubmit: " + data);
+
         searchview = findViewById(R.id.searchview);
         searchview.clearFocus();
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                /*Navigation*/
                 ArNavigation arNavigation = new ArNavigation(lat, lon);
-
                 Log.d("Lkwa", "mylat: " + arNavigation.getMylat());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                /* Recommandation des salles*/
-                Log.d("l7wa", "onQueryTextSubmit: ");
+
+                Log.d("l7wa", "onQueryTextSubmit: " );
                 return false;
             }
         });
@@ -140,6 +138,32 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap map) {
         googleMap = map;
         updateMapWithCurrentLocation();
+    }
+    public  String loadJSONFromAsset(String filename) {
+        String json = null;
+        try {
+            int resourceId = getResources().getIdentifier(filename, "raw", getPackageName());
+
+            if (resourceId == 0) {
+                Log.e("LoadJSON", "Resource not found: " + filename);
+                return null;
+            }
+            InputStream is = getResources().openRawResource(resourceId);
+
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+            json = sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     private void checkLocationPermission() {
@@ -190,7 +214,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onLowMemory();
         mapView.onLowMemory();
     }
-    /*protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -204,42 +228,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }*/
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                // Handle if the user canceled the scan
-            } else {
-                String qrContent = result.getContents();
-                showPopup("Scanned QR Code", qrContent);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void showPopup(String title, String message) {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.custom_popup_layout);
-
-        TextView titleTextView = dialog.findViewById(R.id.titleTextView);
-        TextView messageTextView = dialog.findViewById(R.id.messageTextView);
-
-        titleTextView.setText(title);
-        messageTextView.setText(message);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                // Handle any actions when the dialog is dismissed
-            }
-        });
-
-        dialog.show();
     }
 }

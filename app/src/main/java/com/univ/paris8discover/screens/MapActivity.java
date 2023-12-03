@@ -93,17 +93,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                String  puid = findPuidByName(data, query);
-                Log.d("Lkwa", "mylat: " + puid);
-                /*if(puid.equals("")){
-                    showPopup("Alert", "Le numéro de la salle entrée n'existe pas");
+                String puid = findPuidByName(data, query);
+                if(puid == null){
+                    showPopup("Alert !!!", "la salle entrée n'existe pas");
                 }
                 else{
-                    ArNavigation arNavigation = new ArNavigation(lat, lon, puid);
                     Intent intent = new Intent(MapActivity.this, ArNavigation.class);
+                     /*= 2.3634695341113767;
+        = 48.94568295742288;
+         = "poi_6d5113e7-5fd3-466d-bcb9-9dd6d3312e6f";*/
+                    intent.putExtra("puid", "poi_6d5113e7-5fd3-466d-bcb9-9dd6d3312e6f");
+                    intent.putExtra("lat", 48.94568295742288);
+                    intent.putExtra("lon", 2.3634695341113767);
                     startActivity(intent);
-                    Log.d("Lkwa", "mylat: " + puid);
-                }*/
+                }
                 //
 
                 return false;
@@ -251,7 +254,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 JSONObject poi = poisArray.getJSONObject(i);
                 String name = poi.getString("name");
 
-                if (name.equals(targetName)) {
+                if (name.toLowerCase().equals(targetName.toLowerCase())) {
                     return poi.getString("puid");
                 }
             }

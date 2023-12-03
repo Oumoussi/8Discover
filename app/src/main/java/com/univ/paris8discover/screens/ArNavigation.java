@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.univ.paris8discover.R;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,12 +41,14 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
     private String jsonfile = "";
     private double mylat;
     private double mylon;
-    private String puid;
+    private String puid = "poi_6d5113e7-5fd3-466d-bcb9-9dd6d3312e6f";
 
     public ArNavigation(double mylat, double mylon, String puid ){
         this.mylat = mylat;
         this.mylon = mylon;
         this.puid = puid;
+    }
+    public ArNavigation() {
     }
 
     public double getMylat(){
@@ -54,11 +57,22 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if (intent != null) {
+            this.mylat = intent.getDoubleExtra("lat", 0.0);
+            this.mylon = intent.getDoubleExtra("lon", 0.0);
+            this.puid = intent.getStringExtra("puid");
+        }
+
+
+        Log.d("Lkwa", "mylat: " + this.puid);
         setContentView(R.layout.navigation);
 
 
-        jsonfile =  loadJSONFromAsset("stairsandexits");
 
+
+
+        jsonfile =  loadJSONFromAsset("stairsandexits");
         mapView = findViewById(R.id.mapindoorView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync((OnMapReadyCallback) this);
@@ -67,8 +81,8 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap map) {
-        String coordinates_lon = "" + this.mylat;
-        String coordinates_lat = "" + this.mylon;
+        String coordinates_lon = "" + this.mylon;
+        String coordinates_lat = "" + this.mylat;
         String floor_number = "0";
         String puid = this.puid;
 
@@ -88,45 +102,48 @@ public class ArNavigation extends AppCompatActivity implements OnMapReadyCallbac
 
         googleMap = map;
         String jsonResponse = apiCaller.getResult();
+        Log.d("TAG", "onMapReady: " + jsonResponse);
         updateRoute(jsonResponse);
     }
 
     private void updateRoute(String jsonResponse) {
         try {
             JSONObject jsonObject = new JSONObject(jsonResponse);
-            JSONArray poisArray = jsonObject.getJSONArray("pois");
+            if (jsonObject.has("pois") && !jsonObject.isNull("pois")) {
+                JSONArray poisArray = jsonObject.getJSONArray("pois");
+                List<LatLng> newCoordinates = new ArrayList<>();
+                for (int i = 0; i < poisArray.length(); i++) {
+                    JSONObject poi = poisArray.getJSONObject(i);
+                    double lat = poi.getDouble("lat");
+                    double lng = poi.getDouble("lon");
+                    String type = getTypeForPuid(jsonfile, poi.getString("puid"));
+                    if(type.equals("Stair")){
+                        Log.d("lkwa", "lkwa : " + type);
+                    }
 
-            List<LatLng> newCoordinates = new ArrayList<>();
-            for (int i = 0; i < poisArray.length(); i++) {
-                JSONObject poi = poisArray.getJSONObject(i);
-                double lat = poi.getDouble("lat");
-                double lng = poi.getDouble("lon");
-                String type = getTypeForPuid(jsonfile, poi.getString("puid"));
-                if(type.equals("Stair")){
-                    Log.d("lkwa", "lkwa : " + type);
+                    newCoordinates.add(new LatLng(lat, lng));
                 }
 
-                newCoordinates.add(new LatLng(lat, lng));
+                // Update the PolylineOptions with the new coordinates
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .width(5)
+                        .color(Color.BLUE);
+                for (LatLng coord : newCoordinates) {
+                    polylineOptions.add(coord);
+                }
+
+                // Clear the previous route and draw the new one
+                googleMap.clear();
+                googleMap.addPolyline(polylineOptions);
+
+                // Move the camera to the first point in the new route
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newCoordinates.get(0), 18));
+
+                addMarkersForPoints(newCoordinates);
             }
 
-            // Update the PolylineOptions with the new coordinates
-            PolylineOptions polylineOptions = new PolylineOptions()
-                    .width(5)
-                    .color(Color.BLUE);
-            for (LatLng coord : newCoordinates) {
-                polylineOptions.add(coord);
-            }
-
-            // Clear the previous route and draw the new one
-            googleMap.clear();
-            googleMap.addPolyline(polylineOptions);
-
-            // Move the camera to the first point in the new route
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newCoordinates.get(0), 18));
-
-            addMarkersForPoints(newCoordinates);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("Error", "updateRoute: " +  e.getClass().getName());;
         }
     }
 

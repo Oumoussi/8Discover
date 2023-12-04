@@ -89,6 +89,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         checkLocationPermission();
 
+        startnavigation();
         btnScanQRCode = findViewById(R.id.btnScanQRCode);
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +103,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         initializer(data);
-        startnavigation();
         listView = findViewById(R.id.listView);
 
         // Create an ArrayAdapter to update the list

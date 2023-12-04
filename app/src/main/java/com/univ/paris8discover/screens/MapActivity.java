@@ -89,7 +89,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         checkLocationPermission();
 
-        startnavigation();
         btnScanQRCode = findViewById(R.id.btnScanQRCode);
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +102,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         initializer(data);
+        startnavigation();
         listView = findViewById(R.id.listView);
 
         // Create an ArrayAdapter to update the list
@@ -121,8 +121,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Intent intent = new Intent(MapActivity.this, ArNavigation.class);
 
                     intent.putExtra("puid", puid);
-                    intent.putExtra("lat", 48.94568295742288);
-                    intent.putExtra("lon", 2.3634695341113767);
+                    intent.putExtra("lat", lat);
+                    intent.putExtra("lon", lon);
                     startActivity(intent);
                 }
                 //
